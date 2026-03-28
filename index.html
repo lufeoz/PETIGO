@@ -117,6 +117,23 @@
     letter-spacing: 2px; margin-bottom: 16px;
   }
 
+  /* ───── UNIVERSAL INTERACTIVE STYLE ───── */
+  .stat-card, .milestone-item, .product-card, .strategy-card {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .stat-card:hover, .milestone-item:hover, .product-card:hover, .strategy-card:hover {
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-4px);
+    border-color: rgba(255,107,26,0.4);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  .stat-card:active, .milestone-item:active, .product-card:active, .strategy-card:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+
   /* ───── STAT CARDS ───── */
   .stats-row {
     display: grid;
@@ -296,6 +313,11 @@
     font-size: 12px;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     vertical-align: middle;
+    transition: background 0.2s ease;
+  }
+
+  .roadmap-table tr:hover td {
+    background: rgba(255,255,255,0.03);
   }
 
   .task-name-cell {
