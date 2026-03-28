@@ -1189,12 +1189,13 @@
 
   <!-- ─── JAVASCRIPT FOR DYNAMIC TASK MANAGEMENT ─── -->
   <script>
-    const STORAGE_KEY = 'petigo_actions_data';
+    // 저장 키를 변경하여 이전의 잘못된 데이터를 강제로 새로고침합니다.
+    const STORAGE_KEY = 'petigo_actions_v5_final'; 
     const actionsGrid = document.getElementById('actionsGrid');
     const personTemplate = document.getElementById('personTemplate');
     const taskTemplate = document.getElementById('taskTemplate');
 
-    // 초기 데이터 (원본 데이터 100% 복구)
+    // 원본 데이터 100% (전실장, 유실장, 대표님 모든 항목)
     const initialData = [
       {
         name: '전실장 (전형우)', role: '제품 디자이너', avatar: '전', avatarClass: 'avatar-designer',
