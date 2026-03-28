@@ -130,6 +130,36 @@
   .log-section { margin-bottom: 32px; }
   .history-section { }
 
+  /* ───── FLOATING ACTION BUTTON ───── */
+  .floating-history-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 60px;
+    height: 60px;
+    background: var(--orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(255,107,26,0.4);
+    cursor: pointer;
+    z-index: 15000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 28px;
+    border: none;
+  }
+
+  .floating-history-btn:hover {
+    transform: scale(1.1) rotate(-15deg);
+    background: var(--orange-light);
+    box-shadow: 0 12px 32px rgba(255,107,26,0.5);
+  }
+
+  .floating-history-btn:active {
+    transform: scale(0.95);
+  }
+
   /* (Keep other styles same) */
   .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 36px; }
   .stat-card { background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 14px; padding: 18px 20px; }
@@ -424,7 +454,13 @@
   </div>
 </div>
 
+<!-- ─── FLOATING HISTORY BUTTON ─── -->
+<button class="floating-history-btn" onclick="toggleSidebar(true)" title="변경 이력 및 복구">
+  ⏳
+</button>
+
 <!-- ─── FOOTER ─── -->
+<div class="footer">
   <span>PETIGO</span> · 반려동물 테크웨어 아웃도어 브랜드 · 론칭 목표 2026년 10월~11월<br>
   <small style="opacity:0.5;">2026.03.28 데이터 완전 복구 및 실시간 협업 도구 업그레이드</small>
 </div>
