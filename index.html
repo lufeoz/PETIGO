@@ -1277,5 +1277,28 @@
   <small style="margin-top:6px; display:block; opacity:0.5;">2026.03.28 기준 · 회의록 & 기획안 반영 버전</small>
 </div>
 
+  <!-- ─── JAVASCRIPT FOR PERSISTENCE ─── -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const checkboxes = document.querySelectorAll('.task-checkbox');
+      
+      // 1. 각 체크박스에 고유 ID 부여 및 상태 복원
+      checkboxes.forEach((cb, index) => {
+        const storageKey = `petigo_task_${index}`;
+        cb.id = storageKey;
+        
+        // 저장된 상태가 있으면 복원
+        const savedState = localStorage.getItem(storageKey);
+        if (savedState !== null) {
+          cb.checked = savedState === 'true';
+        }
+
+        // 2. 클릭 시 상태 저장 이벤트 리스너 등록
+        cb.addEventListener('change', (e) => {
+          localStorage.setItem(storageKey, e.target.checked);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
