@@ -548,23 +548,37 @@
         item.querySelector('.task-title').innerText = t.title;
         item.querySelector('.task-detail').innerText = t.detail;
         
+        // 클릭 이벤트 (체크 토글)
         item.onclick = (e) => {
           if (e.target.hasAttribute('contenteditable') || e.target.classList.contains('task-delete')) return;
+          const oldStatus = cb.checked ? '완료' : '진행중';
           cb.checked = !cb.checked;
-          addLog(`<b>${currentUser}</b>님이 '${t.title}'을 <b>${cb.checked ? '완료' : '취소'}</b>했습니다.`);
+          const newStatus = cb.checked ? '완료' : '진행중';
+          addLog(`<b>${currentUser}</b>님이 '${t.title}' 상태를 <b>${oldStatus} → ${newStatus}</b>로 변경했습니다.`);
           saveCurrentData();
         };
 
+        // 삭제 이벤트
         item.querySelector('.task-delete').onclick = (e) => {
           e.stopPropagation();
           if (confirm('이 작업을 삭제하시겠습니까?')) {
-            addLog(`<b>${currentUser}</b>님이 '${t.title}'을 삭제했습니다.`);
+            addLog(`<b>${currentUser}</b>님이 작업을 삭제했습니다: <b>'${t.title}'</b>`);
             item.remove(); saveCurrentData();
           }
         };
 
+        // 텍스트 수정 이벤트 (A -> B 추적)
         item.querySelectorAll('[contenteditable]').forEach(el => {
-          el.onblur = () => { addLog(`<b>${currentUser}</b>님이 내용을 수정했습니다.`); saveCurrentData(); };
+          let oldValue = '';
+          el.onfocus = () => { oldValue = el.innerText.trim(); };
+          el.onblur = () => {
+            const newValue = el.innerText.trim();
+            if (oldValue !== newValue) {
+              const fieldName = el.classList.contains('task-title') ? '제목' : (el.classList.contains('task-detail') ? '내용' : '기한');
+              addLog(`<b>${currentUser}</b>님이 ${fieldName}을 수정: <b>"${oldValue}" → "${newValue}"</b>`);
+              saveCurrentData();
+            }
+          };
         });
         list.appendChild(item);
       });
