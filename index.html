@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PETIGO — 론칭 대시보드 (v5.0 팀 콘솔 통합)</title>
+<title>PETIGO — 론칭 대시보드 (v6.0 제품별 게시판 통합)</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 
@@ -115,46 +115,72 @@
   }
   .presence-dot-avatar.online { opacity: 1; filter: grayscale(0); border-color: var(--green); }
 
-  /* ───── UNIVERSAL INTERACTIVE STYLE ───── */
-  .stat-card, .milestone-item, .product-card, .strategy-card {
-    cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ───── PRODUCT BOARD (NEW PAGE OVERLAY) ───── */
+  .board-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--charcoal); z-index: 25000;
+    display: none; flex-direction: column;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .stat-card:hover, .milestone-item:hover, .product-card:hover, .strategy-card:hover {
-    background: rgba(255,255,255,0.06); transform: translateY(-4px);
-    border-color: rgba(255,107,26,0.4);
-  }
+  .board-overlay.active { display: flex; }
 
-  /* ───── CRITICAL PATH ───── */
-  .critical-banner {
-    background: linear-gradient(135deg, rgba(255,107,26,0.18) 0%, rgba(255,107,26,0.06) 100%);
-    border: 1px solid rgba(255,107,26,0.35); border-radius: 14px;
-    padding: 18px 22px; margin-bottom: 32px;
+  .board-header {
+    padding: 32px 48px; border-bottom: 1px solid var(--charcoal-3);
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .critical-label { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 2px; margin-bottom: 12px; }
-  .path-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
-  .path-item { font-size: 12px; font-weight: 600; color: var(--white); background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 6px; padding: 5px 10px; white-space: nowrap; }
-  .path-item.done { background: rgba(52,199,89,0.15); border-color: rgba(52,199,89,0.4); color: var(--green); }
-  .path-item.hot { background: rgba(255,107,26,0.2); border-color: var(--orange); color: var(--orange); }
-  .path-arrow { color: var(--grey); font-size: 13px; }
+  .board-title-group { display: flex; align-items: center; gap: 24px; }
+  .board-priority-tag { 
+    background: var(--orange); color: white; padding: 6px 16px; 
+    border-radius: 30px; font-size: 13px; font-weight: 900; 
+  }
+  .board-product-name { font-size: 28px; font-weight: 800; color: var(--white); }
 
-  /* ───── STAT CARDS ───── */
+  .board-main { flex: 1; display: grid; grid-template-columns: 1fr 450px; overflow: hidden; }
+
+  .board-spec-area { padding: 48px; overflow-y: auto; border-right: 1px solid var(--charcoal-3); }
+  .spec-card {
+    background: var(--charcoal-2); padding: 40px; border-radius: 24px;
+    min-height: 500px; border: 1px solid var(--charcoal-3);
+  }
+  .spec-label { font-size: 12px; color: var(--orange); font-weight: 700; margin-bottom: 24px; letter-spacing: 2px; }
+  .spec-content { font-size: 17px; line-height: 1.9; color: var(--white); outline: none; white-space: pre-wrap; }
+
+  .board-comment-area { padding: 40px; background: rgba(0,0,0,0.25); display: flex; flex-direction: column; }
+  .comment-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px; }
+  .comment-bubble {
+    background: var(--charcoal-3); padding: 20px; border-radius: 16px;
+    border-bottom-left-radius: 4px; align-self: flex-start; max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .comment-meta { font-size: 11px; color: var(--grey); margin-bottom: 8px; display: flex; gap: 10px; }
+  .comment-meta b { color: var(--orange); }
+  .comment-text { font-size: 14px; line-height: 1.6; color: #E5E5E7; }
+
+  .comment-input-group {
+    display: flex; gap: 12px; background: var(--charcoal-2);
+    padding: 16px; border-radius: 18px; border: 1px solid var(--charcoal-3);
+  }
+  .comment-input {
+    flex: 1; background: transparent; border: none; color: white;
+    font-size: 15px; outline: none;
+  }
+  .comment-send-btn {
+    background: var(--orange); color: white; border: none;
+    padding: 10px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .comment-send-btn:hover { background: var(--orange-light); transform: scale(1.05); }
+
+  @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ───── STAT CARDS & GRID ───── */
   .section-title { font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 2px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
   .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 36px; }
-  .stat-card { background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 14px; padding: 18px 20px; }
+  .stat-card { background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 14px; padding: 18px 20px; transition: all 0.25s; cursor: pointer; }
+  .stat-card:hover { transform: translateY(-4px); border-color: var(--orange); }
   .stat-label { font-size: 11px; color: var(--grey); margin-bottom: 8px; }
   .stat-value { font-size: 28px; font-weight: 800; color: var(--white); line-height: 1; }
   .stat-unit { font-size: 13px; font-weight: 500; color: var(--grey); margin-top: 4px; }
-
-  /* ───── MILESTONES ───── */
-  .milestones-wrap { margin-bottom: 36px; }
-  .milestone-row { display: flex; gap: 12px; flex-wrap: wrap; }
-  .milestone-item { background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 12px; padding: 14px 18px; flex: 1; min-width: 140px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
-  .milestone-item.past { border-color: rgba(52,199,89,0.3); }
-  .milestone-item.current { border-color: var(--orange); background: rgba(255,107,26,0.08); }
-  .milestone-date { font-size: 11px; font-weight: 700; color: var(--orange); margin-bottom: 6px; }
-  .milestone-date.past-date { color: var(--green); }
-  .milestone-name { font-size: 12px; font-weight: 600; color: var(--white); line-height: 1.4; }
-  .milestone-check { font-size: 16px; margin-bottom: 4px; }
 
   /* ───── NEXT ACTIONS ───── */
   .actions-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 40px; }
@@ -188,9 +214,10 @@
   .add-task-btn { width: 100%; padding: 10px; margin-top: 10px; background: transparent; border: 1px dashed var(--charcoal-3); border-radius: 10px; color: var(--grey); font-size: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .add-task-btn:hover { background: rgba(255,107,26,0.05); border-color: var(--orange); color: var(--orange); }
 
-  /* ───── PRODUCT PRIORITY ───── */
+  /* ───── PRODUCT CARDS ───── */
   .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 36px; }
-  .product-card { background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 12px; padding: 16px 18px; display: flex; align-items: flex-start; gap: 12px; }
+  .product-card { background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 12px; padding: 16px 18px; display: flex; align-items: flex-start; gap: 12px; transition: all 0.25s; cursor: pointer; }
+  .product-card:hover { transform: translateY(-4px); border-color: var(--orange); }
   .product-priority { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
   .priority-1 { background: var(--orange); color: white; }
   .priority-2 { background: rgba(255,107,26,0.3); color: var(--orange-light); }
@@ -206,21 +233,17 @@
   .roadmap-wrap { background: var(--charcoal-2); border: 1px solid var(--charcoal-3); border-radius: 16px; padding: 24px; margin-bottom: 36px; overflow-x: auto; }
   .roadmap-table { width: 100%; border-collapse: collapse; min-width: 900px; }
   .roadmap-table th { font-size: 11px; font-weight: 700; color: var(--grey); padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--charcoal-3); white-space: nowrap; }
-  .roadmap-table th.month-now { color: var(--orange); border-bottom: 2px solid var(--orange); }
   .roadmap-table td { padding: 7px 10px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
-  .roadmap-table tr:hover td { background: rgba(255,255,255,0.03); }
-  .task-name-cell { font-size: 12px; font-weight: 500; color: var(--white); min-width: 200px; max-width: 220px; }
-  .cell-bar { border-radius: 6px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
-  .bar-designer { background: rgba(10,132,255,0.3); color: #4DA3FF; border: 1px solid rgba(10,132,255,0.4); }
-  .bar-marketer { background: rgba(255,107,26,0.3); color: #FF9A5C; border: 1px solid rgba(255,107,26,0.4); }
-  .bar-production { background: rgba(52,199,89,0.3); color: #5EDD7A; border: 1px solid rgba(52,199,89,0.4); }
-  .bar-all { background: rgba(255,214,10,0.3); color: #FFE066; border: 1px solid rgba(255,214,10,0.4); }
-  .bar-done { background: rgba(52,199,89,0.15); color: var(--green); border: 1px solid rgba(52,199,89,0.3); }
+  .task-name-cell { font-size: 12px; font-weight: 500; color: var(--white); min-width: 200px; }
+  .cell-bar { border-radius: 6px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+  .bar-designer { background: rgba(10,132,255,0.3); color: #4DA3FF; }
+  .bar-marketer { background: rgba(255,107,26,0.3); color: #FF9A5C; }
+  .bar-production { background: rgba(52,199,89,0.3); color: #5EDD7A; }
+  .bar-done { background: rgba(52,199,89,0.15); color: var(--green); }
   .cat-label { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-right: 4px; }
   .cat-designer { background: rgba(10,132,255,0.15); color: #4DA3FF; }
   .cat-marketer { background: rgba(255,107,26,0.15); color: #FF9A5C; }
   .cat-production { background: rgba(52,199,89,0.15); color: #5EDD7A; }
-  .cat-all { background: rgba(255,214,10,0.15); color: #FFE066; }
 
   /* ───── STRATEGY NOTE ───── */
   .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px; }
@@ -229,33 +252,12 @@
   .strategy-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 12.5px; line-height: 1.5; }
   .strategy-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 6px; }
 
-  /* ───── LOG & HISTORY UI ───── */
-  .log-entry { font-size: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .log-time { color: var(--grey); font-size: 10px; margin-bottom: 4px; }
-  .log-msg b { color: var(--orange); }
-  .history-list { display: flex; flex-direction: column; gap: 8px; }
-  .history-item { background: var(--charcoal-3); padding: 12px; border-radius: 10px; font-size: 11px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
-  .history-item:hover { background: var(--grey-2); }
-  .restore-badge { font-size: 9px; background: var(--orange); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
-
-  /* ───── FOOTER ───── */
-  .footer { text-align: center; padding-top: 24px; border-top: 1px solid var(--charcoal-3); font-size: 11px; color: var(--grey); }
-  .footer span { color: var(--orange); font-weight: 700; }
-
-  /* ───── USER SELECT MODAL ───── */
-  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 30000; display: flex; align-items: center; justify-content: center; }
-  .user-modal { background: var(--charcoal-2); padding: 40px; border-radius: 24px; text-align: center; border: 1px solid var(--charcoal-3); max-width: 500px; }
-  .user-modal h2 { margin-bottom: 32px; color: var(--orange); font-weight: 800; }
-  .user-options { display: flex; flex-direction: column; gap: 12px; }
-  .user-btn { background: var(--charcoal-3); border: 1px solid var(--charcoal-3); color: white; padding: 18px; border-radius: 14px; cursor: pointer; transition: all 0.2s; font-size: 15px; font-weight: 600; }
-  .user-btn:hover { border-color: var(--orange); background: var(--orange-dim); transform: translateY(-4px); }
-
   @media (max-width: 768px) {
     .stats-row { grid-template-columns: repeat(2, 1fr); }
     .actions-grid { grid-template-columns: 1fr; }
     .products-grid { grid-template-columns: 1fr; }
-    .strategy-grid { grid-template-columns: 1fr; }
-    .sidebar { width: 100%; right: -100%; }
+    .board-main { grid-template-columns: 1fr; }
+    .board-comment-area { display: none; } /* 모바일에서 댓글창은 일단 숨김 */
   }
 </style>
 </head>
@@ -264,7 +266,7 @@
 <!-- User Selection Modal -->
 <div id="userModal" class="modal-overlay">
   <div class="user-modal">
-    <h2>누구로 접속하시겠습니까?</h2>
+    <h2>본인은 누구인가요?</h2>
     <div class="user-options">
       <button class="user-btn" onclick="selectUser('전실장')">전실장 (제품 디자이너)</button>
       <button class="user-btn" onclick="selectUser('유실장')">유실장 (브랜드 마케터)</button>
@@ -308,10 +310,10 @@
 <!-- ─── STAT CARDS ─── -->
 <div class="section-title">PROJECT STATUS</div>
 <div class="stats-row">
-  <div class="stat-card"><div class="stat-label">론칭 D-Day</div><div class="stat-value">197</div><div class="stat-unit">일 남음</div></div>
-  <div class="stat-card"><div class="stat-label">1차 라인업</div><div class="stat-value">8+1</div><div class="stat-unit">종 확정</div></div>
-  <div class="stat-card"><div class="stat-label">선행 제품</div><div class="stat-value">3</div><div class="stat-unit">종 집중</div></div>
-  <div class="stat-card" onclick="toggleSidebar(true)"><div class="stat-label">업데이트</div><div class="stat-value" id="updateCount">0</div><div class="stat-unit">건의 이력 (클릭)</div></div>
+  <div class="stat-card"><div class="stat-label">론칭 D-Day</div><div class="stat-value">197</div><div class="stat-unit">일 남음 (10월 12일 목표)</div></div>
+  <div class="stat-card"><div class="stat-label">1차 제품 라인업</div><div class="stat-value">8+1</div><div class="stat-unit">종 확정</div></div>
+  <div class="stat-card"><div class="stat-label">핵심 선행 제품</div><div class="stat-value">3</div><div class="stat-unit">종 집중 (F/W)</div></div>
+  <div class="stat-card" onclick="toggleSidebar(true)"><div class="stat-label">변경 로그</div><div class="stat-value" id="updateCount">0</div><div class="stat-unit">건 기록 (클릭)</div></div>
 </div>
 
 <!-- ─── MILESTONE ─── -->
@@ -327,21 +329,59 @@
 </div>
 
 <!-- ─── NEXT ACTIONS ─── -->
-<div class="section-title">NEXT ACTIONS — 담당자별 <span>* 내용을 클릭해 수정하고 상태를 공유하세요.</span></div>
+<div class="section-title">NEXT ACTIONS — 담당자별 <span>* 항목 클릭 시 완료 / 글자 클릭 시 수정</span></div>
 <div class="actions-grid" id="actionsGrid"></div>
 
 <!-- ─── PRODUCT PRIORITY ─── -->
-<div class="section-title">PRODUCT PRIORITY — 1차 제품 8종</div>
+<div class="section-title">PRODUCT PRIORITY — 1차 제품 8종 <span>* 제품을 클릭해 전용 게시판을 여세요.</span></div>
 <div class="products-grid">
-  <div class="product-card"><div class="product-priority priority-1">1</div><div class="product-info"><div class="product-name">PETIGO 패딩</div><div class="product-tags"><span class="product-tag hot">F/W 핵심</span><span class="product-tag">3~4만원</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-1">2</div><div class="product-info"><div class="product-name">경량 패딩</div><div class="product-tags"><span class="product-tag hot">F/W 핵심</span><span class="product-tag">2.5~3만원</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-1">3</div><div class="product-info"><div class="product-name">후리스 (조끼)</div><div class="product-tags"><span class="product-tag hot">F/W 핵심</span><span class="product-tag">2.5~3.5만원</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-2">4</div><div class="product-info"><div class="product-name">X형 하네스</div><div class="product-tags"><span class="product-tag">기어</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-2">5</div><div class="product-info"><div class="product-name">포켓 하네스</div><div class="product-tags"><span class="product-tag">기어</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-2">6</div><div class="product-info"><div class="product-name">L형 하네스</div><div class="product-tags"><span class="product-tag">기어</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-3">7</div><div class="product-info"><div class="product-name">리드줄</div><div class="product-tags"><span class="product-tag hot">현금화</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-3">8</div><div class="product-info"><div class="product-name">산책 파우치</div><div class="product-tags"><span class="product-tag hot">현금화</span></div></div></div>
-  <div class="product-card"><div class="product-priority priority-4">+</div><div class="product-info"><div class="product-name">티셔츠</div><div class="product-tags"><span class="product-tag">세트용</span></div></div></div>
+  <div class="product-card" onclick="openBoard(1, 'PETIGO 패딩')">
+    <div class="product-priority priority-1">1</div>
+    <div class="product-info"><div class="product-name">PETIGO 패딩</div><div class="product-tags"><span class="product-tag hot">F/W 핵심</span><span class="product-tag">3~4만원</span></div></div>
+  </div>
+  <div class="product-card" onclick="openBoard(2, '경량 패딩')">
+    <div class="product-priority priority-1">2</div>
+    <div class="product-info"><div class="product-name">경량 패딩</div><div class="product-tags"><span class="product-tag hot">F/W 핵심</span><span class="product-tag">2.5~3만원</span></div></div>
+  </div>
+  <div class="product-card" onclick="openBoard(3, '후리스 (조끼)')">
+    <div class="product-priority priority-1">3</div>
+    <div class="product-info"><div class="product-name">후리스 (조끼)</div><div class="product-tags"><span class="product-tag hot">F/W 핵심</span><span class="product-tag">2.5~3.5만원</span></div></div>
+  </div>
+  <div class="product-card" onclick="openBoard(4, 'X형 하네스')"><div class="product-priority priority-2">4</div><div class="product-info"><div class="product-name">X형 하네스</div><div class="product-tags"><span class="product-tag">기어</span></div></div></div>
+  <div class="product-card" onclick="openBoard(5, '포켓 하네스')"><div class="product-priority priority-2">5</div><div class="product-info"><div class="product-name">포켓 하네스</div><div class="product-tags"><span class="product-tag">기어</span></div></div></div>
+  <div class="product-card" onclick="openBoard(6, 'L형 하네스')"><div class="product-priority priority-2">6</div><div class="product-info"><div class="product-name">L형 하네스</div><div class="product-tags"><span class="product-tag">기어</span></div></div></div>
+  <div class="product-card" onclick="openBoard(7, '리드줄')"><div class="product-priority priority-3">7</div><div class="product-info"><div class="product-name">리드줄</div><div class="product-tags"><span class="product-tag hot">현금화</span></div></div></div>
+  <div class="product-card" onclick="openBoard(8, '산책 파우치')"><div class="product-priority priority-3">8</div><div class="product-info"><div class="product-name">산책 파우치</div><div class="product-tags"><span class="product-tag hot">현금화</span></div></div></div>
+  <div class="product-card" onclick="openBoard(9, '티셔츠')"><div class="product-priority priority-4">+</div><div class="product-info"><div class="product-name">티셔츠</div><div class="product-tags"><span class="product-tag">세트용</span></div></div></div>
+</div>
+
+<!-- ─── PRODUCT BOARD OVERLAY (THE "NEW PAGE") ─── -->
+<div class="board-overlay" id="boardOverlay">
+  <div class="board-header">
+    <div class="board-title-group">
+      <div class="board-priority-tag" id="boardPriorityTag">P1</div>
+      <div class="board-product-name" id="boardProductName">제품명</div>
+    </div>
+    <div class="close-btn" onclick="closeBoard()">✕</div>
+  </div>
+  <div class="board-main">
+    <div class="board-spec-area">
+      <div class="spec-card">
+        <div class="spec-label">PRODUCT SPEC & DESCRIPTION</div>
+        <div class="spec-content" id="boardSpecContent" contenteditable="true" placeholder="상세 스펙과 특징을 입력하세요...">
+          여기에 상세 내용을 작성하세요.
+        </div>
+      </div>
+    </div>
+    <div class="board-comment-area">
+      <div class="section-title">TEAM FEEDBACK <span>게시판</span></div>
+      <div class="comment-list" id="boardCommentList"></div>
+      <div class="comment-input-group">
+        <input type="text" class="comment-input" id="commentInput" placeholder="의견을 남겨주세요...">
+        <button class="comment-send-btn" onclick="addComment()">등록</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ─── ROADMAP ─── -->
@@ -352,55 +392,44 @@
       <tr><th>작업 항목</th><th class="month-now">3월 ▼</th><th>4월</th><th>5월</th><th>6월</th><th>7월</th><th>8월</th><th>9월</th><th>10월</th><th>11월</th></tr>
     </thead>
     <tbody>
-      <tr><td class="task-name-cell" colspan="10" style="padding-top:14px;"><span class="cat-label cat-designer">전실장</span> 제품 디자이너</td></tr>
+      <tr><td colspan="10" style="padding-top:14px;"><span class="cat-label cat-designer">전실장</span> 제품 디자이너</td></tr>
       <tr><td>✅ 1차 시안 납품</td><td><div class="cell-bar bar-done">완료</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td>🔥 시안 확정</td><td></td><td><div class="cell-bar bar-designer">전실장</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td>테크팩 착수</td><td></td><td><div class="cell-bar bar-designer">전실장</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td class="task-name-cell" colspan="10" style="padding-top:18px;"><span class="cat-label cat-marketer">유실장</span> 브랜드 마케터</td></tr>
-      <tr><td>🔥 로고 시안</td><td></td><td><div class="cell-bar bar-marketer">유실장</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>🔥 피드백 & 시안 확정</td><td></td><td><div class="cell-bar bar-designer">전실장</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>원단 시장 & 스펙 검토</td><td><div class="cell-bar bar-designer">진행중</div></td><td><div class="cell-bar bar-designer">전실장</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td colspan="10" style="padding-top:18px;"><span class="cat-label cat-marketer">유실장</span> 브랜드 마케터</td></tr>
+      <tr><td>🔥 로고 시안 공유</td><td></td><td><div class="cell-bar bar-marketer">유실장</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
       <tr><td>상세페이지 기획</td><td></td><td><div class="cell-bar bar-marketer">유실장</div></td><td><div class="cell-bar bar-marketer">유실장</div></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
     </tbody>
   </table>
 </div>
 
 <!-- ─── STRATEGY ─── -->
-<div class="section-title">STRATEGY NOTES</div>
+<div class="section-title">STRATEGY NOTES — 핵심 결정사항</div>
 <div class="strategy-grid">
   <div class="strategy-card"><div class="strategy-title">🎨 디자인 방향성</div>
     <div class="strategy-item"><div class="strategy-dot"></div><div>컬러: 카키·베이지·브라운 등 아웃도어 차분한 톤</div></div>
     <div class="strategy-item"><div class="strategy-dot"></div><div>패딩: 누빔선 없는 매끈한 디자인</div></div>
   </div>
   <div class="strategy-card"><div class="strategy-title">🏭 생산 & 품질 원칙</div>
-    <div class="strategy-item"><div class="strategy-dot"></div><div>코팅 알루미늄 버클 필수 적용</div></div>
+    <div class="strategy-item"><div class="strategy-dot"></div><div>코팅 알루미늄 버클 필수 적용 (이염 방지)</div></div>
     <div class="strategy-item"><div class="strategy-dot"></div><div>목표 불량률: 3% 이하</div></div>
   </div>
 </div>
 
-<!-- ─── SIDEBAR (TEAM CONSOLE) ─── -->
+<!-- ─── SIDEBAR ─── -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
 <div class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="section-title" style="margin-bottom:0;">TEAM CONSOLE</div>
-    <div class="close-btn" onclick="toggleSidebar(false)">✕</div>
-  </div>
+  <div class="sidebar-header"><div class="section-title">TEAM CONSOLE</div><div class="close-btn" onclick="toggleSidebar(false)">✕</div></div>
   <div class="sidebar-content">
-    <!-- User Info -->
     <div class="sidebar-user-box" id="sidebarUserBox"></div>
-
-    <div class="log-section">
-      <div class="section-title">ACTIVITY LOG <span>상세 변경 기록</span></div>
-      <div id="activityLog"></div>
-    </div>
-    <div class="history-section">
-      <div class="section-title">VERSION HISTORY <span>스냅샷 복구</span></div>
-      <div id="historyList" class="history-list"></div>
-    </div>
+    <div class="log-section"><div class="section-title">ACTIVITY LOG <span>실시간 기록</span></div><div id="activityLog"></div></div>
+    <div class="history-section"><div class="section-title">VERSION HISTORY <span>스냅샷 복구</span></div><div id="historyList" class="history-list"></div></div>
   </div>
 </div>
 
 <div class="footer">
-  <span>PETIGO</span> · 반려동물 테크웨어 아웃도어 브랜드 · 론칭 목표 2026년 10월~11월<br>
-  <small style="opacity:0.5;">2026.03.28 관리 도구 통합 버전</small>
+  <span>PETIGO</span> · 반려동물 테크웨어 아웃도어 브랜드<br>
+  <small style="opacity:0.5;">2026.03.28 제품별 게시판 통합 버전</small>
 </div>
 
 <!-- Templates -->
@@ -426,9 +455,11 @@
 
 <script>
   let currentUser = null;
-  const STORAGE_KEY = 'petigo_integrated_v5';
-  const LOG_KEY = 'petigo_logs_v5';
-  const HISTORY_KEY = 'petigo_history_v5';
+  let currentBoardId = null;
+  const STORAGE_KEY = 'petigo_master_v6';
+  const LOG_KEY = 'petigo_logs_v6';
+  const HISTORY_KEY = 'petigo_history_v6';
+  const BOARD_STORAGE_KEY = 'petigo_boards_v6';
 
   const initialData = [
     {
@@ -482,42 +513,84 @@
     currentUser = name;
     document.getElementById('userModal').style.display = 'none';
     render();
-    addLog(`<b>${currentUser}</b>님이 시스템에 접속했습니다.`);
+    addLog(`<b>${currentUser}</b>님이 접속했습니다.`);
   }
 
+  // ─── PRODUCT BOARD ───
+  function openBoard(id, name) {
+    currentBoardId = id;
+    const boards = JSON.parse(localStorage.getItem(BOARD_STORAGE_KEY) || '{}');
+    const data = boards[id] || { spec: `[${name}]의 상세 특징과 작업 지시 사항을 기록하세요.`, comments: [] };
+    
+    document.getElementById('boardProductName').innerText = name;
+    document.getElementById('boardPriorityTag').innerText = id === 9 ? '+' : `P${id}`;
+    document.getElementById('boardSpecContent').innerText = data.spec;
+    renderComments(data.comments);
+    
+    document.getElementById('boardOverlay').classList.add('active');
+    addLog(`<b>${currentUser}</b>님이 '${name}' 게시판을 열었습니다.`);
+  }
+
+  function closeBoard() {
+    saveBoardData();
+    document.getElementById('boardOverlay').classList.remove('active');
+    currentBoardId = null;
+  }
+
+  function saveBoardData() {
+    if (!currentBoardId) return;
+    const boards = JSON.parse(localStorage.getItem(BOARD_STORAGE_KEY) || '{}');
+    const spec = document.getElementById('boardSpecContent').innerText;
+    const comments = Array.from(document.querySelectorAll('#boardCommentList .comment-bubble')).map(el => ({
+      user: el.querySelector('.user').innerText,
+      time: el.querySelector('.time').innerText,
+      text: el.querySelector('.comment-text').innerText
+    }));
+    boards[currentBoardId] = { spec, comments };
+    localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boards));
+  }
+
+  function addComment() {
+    const input = document.getElementById('commentInput');
+    if (!input.value.trim()) return;
+    const comment = { user: currentUser, time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }), text: input.value };
+    
+    const div = document.createElement('div');
+    div.className = 'comment-bubble';
+    div.innerHTML = `<div class="comment-meta"><span class="user"><b>${comment.user}</b></span> <span class="time">${comment.time}</span></div><div class="comment-text">${comment.text}</div>`;
+    const list = document.getElementById('boardCommentList');
+    list.appendChild(div);
+    list.scrollTop = list.scrollHeight;
+    
+    input.value = '';
+    saveBoardData();
+    addLog(`<b>${currentUser}</b>님이 게시판에 의견을 남겼습니다.`);
+  }
+
+  function renderComments(comments) {
+    const list = document.getElementById('boardCommentList');
+    list.innerHTML = comments.map(c => `<div class="comment-bubble"><div class="comment-meta"><span class="user"><b>${c.user}</b></span> <span class="time">${c.time}</span></div><div class="comment-text">${c.text}</div></div>`).join('') || '<div style="font-size:12px; color:var(--grey); text-align:center; margin-top:20px;">의견이 없습니다.</div>';
+    list.scrollTop = list.scrollHeight;
+  }
+
+  document.getElementById('boardSpecContent').onblur = () => { saveBoardData(); addLog(`<b>${currentUser}</b>님이 스펙을 수정했습니다.`); };
+
+  // ─── UTILS ───
   function toggleSidebar(open) {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
     if (open) {
-      updateSidebarUserInfo();
-      sidebar.classList.add('active');
-      overlay.classList.add('active');
+      const conf = userConfig[currentUser];
+      document.getElementById('sidebarUserBox').innerHTML = `<div class="presence-avatar ${conf.c}">${conf.a}</div><div class="user-meta"><div class="name">${currentUser}</div><div class="role">${conf.r} (본인)</div></div>`;
+      sidebar.classList.add('active'); overlay.classList.add('active');
     } else {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
+      sidebar.classList.remove('active'); overlay.classList.remove('active');
     }
-  }
-
-  function updateSidebarUserInfo() {
-    const box = document.getElementById('sidebarUserBox');
-    const conf = userConfig[currentUser];
-    box.innerHTML = `
-      <div class="presence-avatar ${conf.c}">${conf.a}</div>
-      <div class="user-meta">
-        <div class="name">${currentUser}</div>
-        <div class="role">${conf.r} (본인)</div>
-        <div class="presence-list">
-          <div class="presence-dot-avatar online avatar-designer" title="전실장">전</div>
-          <div class="presence-dot-avatar online avatar-marketer" title="유실장">유</div>
-          <div class="presence-dot-avatar online avatar-ceo" title="대표님">대</div>
-        </div>
-      </div>
-    `;
   }
 
   function addLog(msg) {
     const logs = JSON.parse(localStorage.getItem(LOG_KEY) || '[]');
-    const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
     logs.unshift({ time, msg });
     localStorage.setItem(LOG_KEY, JSON.stringify(logs.slice(0, 30)));
     renderLogs();
@@ -525,12 +598,7 @@
 
   function renderLogs() {
     const logs = JSON.parse(localStorage.getItem(LOG_KEY) || '[]');
-    document.getElementById('activityLog').innerHTML = logs.map(l => `
-      <div class="log-entry">
-        <div class="log-time">${l.time}</div>
-        <div class="log-msg">${l.msg}</div>
-      </div>
-    `).join('');
+    document.getElementById('activityLog').innerHTML = logs.map(l => `<div class="log-entry"><div class="log-time">${l.time}</div><div class="log-msg">${l.msg}</div></div>`).join('');
   }
 
   function saveSnapshot(data) {
@@ -547,21 +615,12 @@
 
   function renderHistory() {
     const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-    document.getElementById('historyList').innerHTML = history.map((h, i) => `
-      <div class="history-item" onclick="restore(${i})">
-        <div>${h.time} 시점</div>
-        <div class="restore-badge">복구</div>
-      </div>
-    `).join('') || '<div style="font-size:12px; color:var(--grey);">버전 이력이 없습니다.</div>';
+    document.getElementById('historyList').innerHTML = history.map((h, i) => `<div class="history-item" onclick="restore(${i})"><div>${h.time} 버전</div><div class="restore-badge">복구</div></div>`).join('');
   }
 
   function restore(i) {
     const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-    if (confirm('해당 시점으로 데이터를 복구하시겠습니까? 현재 변경사항은 덮어씌워집니다.')) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(history[i].data));
-      addLog(`시스템을 과거 시점(<b>${history[i].time}</b>)으로 복구했습니다.`);
-      render();
-    }
+    if (confirm('복구할까요?')) { localStorage.setItem(STORAGE_KEY, JSON.stringify(history[i].data)); render(); }
   }
 
   function render() {
@@ -573,11 +632,10 @@
     
     data.forEach(p => {
       const card = pTemp.content.cloneNode(true).querySelector('.person-card');
-      const avatar = card.querySelector('.person-avatar');
-      avatar.innerText = p.avatar; avatar.classList.add(p.avatarClass);
+      card.querySelector('.person-avatar').innerText = p.avatar;
+      card.querySelector('.person-avatar').classList.add(p.avatarClass);
       card.querySelector('.person-name').innerText = p.name;
       card.querySelector('.person-role').innerText = p.role;
-      
       const list = card.querySelector('.task-list');
       p.tasks.forEach(t => {
         const item = tTemp.content.cloneNode(true).querySelector('.task-item');
@@ -587,44 +645,23 @@
         dl.innerText = t.deadline; dl.className = `task-deadline ${t.deadlineClass}`;
         item.querySelector('.task-title').innerText = t.title;
         item.querySelector('.task-detail').innerText = t.detail;
-        
         item.onclick = (e) => {
           if (e.target.hasAttribute('contenteditable') || e.target.classList.contains('task-delete')) return;
           const oldS = cb.checked ? '완료' : '진행중';
           cb.checked = !cb.checked;
-          const newS = cb.checked ? '완료' : '진행중';
-          addLog(`<b>${currentUser}</b>님이 '${t.title}' 상태 변경: <b>${oldS} → ${newS}</b>`);
+          addLog(`<b>${currentUser}</b>님이 '${t.title}' 상태 변경: <b>${oldS} → ${cb.checked?'완료':'진행중'}</b>`);
           saveCurrentData();
         };
-
         item.querySelector('.task-delete').onclick = (e) => {
-          e.stopPropagation();
-          if (confirm('이 업무를 삭제하시겠습니까?')) {
-            addLog(`<b>${currentUser}</b>님이 업무를 삭제했습니다: <b>'${t.title}'</b>`);
-            item.remove(); saveCurrentData();
-          }
+          e.stopPropagation(); if (confirm('삭제할까요?')) { item.remove(); saveCurrentData(); }
         };
-
         item.querySelectorAll('[contenteditable]').forEach(el => {
-          let oldV = '';
-          el.onfocus = () => { oldV = el.innerText.trim(); };
-          el.onblur = () => {
-            const newV = el.innerText.trim();
-            if (oldV !== newV) {
-              const f = el.classList.contains('task-title') ? '제목' : (el.classList.contains('task-detail') ? '내용' : '기한');
-              addLog(`<b>${currentUser}</b>님이 ${f} 수정: <b>"${oldV}" → "${newV}"</b>`);
-              saveCurrentData();
-            }
-          };
+          let oldV = ''; el.onfocus = () => oldV = el.innerText.trim();
+          el.onblur = () => { if (oldV !== el.innerText.trim()) { addLog(`<b>${currentUser}</b>님이 내용을 수정했습니다.`); saveCurrentData(); } };
         });
         list.appendChild(item);
       });
-
-      card.querySelector('.add-task-btn').onclick = () => {
-        addLog(`<b>${currentUser}</b>님이 새로운 작업을 추가했습니다.`);
-        p.tasks.push({ title: '새 작업', detail: '내용 입력', deadline: '긴급', deadlineClass: 'deadline-urgent', checked: false });
-        saveSnapshot(data); render();
-      };
+      card.querySelector('.add-task-btn').onclick = () => { p.tasks.push({ title: '새 작업', detail: '내용 입력', deadline: '긴급', deadlineClass: 'deadline-urgent', checked: false }); saveSnapshot(data); render(); };
       grid.appendChild(card);
     });
     document.getElementById('updateCount').innerText = localStorage.getItem('up_cnt') || '0';
@@ -656,10 +693,7 @@
     saveSnapshot(data);
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    // 초기 로드 시 유실 방지
-    if (localStorage.getItem(STORAGE_KEY)) render();
-  });
+  document.addEventListener('DOMContentLoaded', () => { if (localStorage.getItem(STORAGE_KEY)) render(); });
 </script>
 </body>
 </html>
