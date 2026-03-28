@@ -265,7 +265,7 @@
     box-shadow: 0 0 0 1px var(--orange-dim);
   }
 
-  .task-delete, .person-delete {
+  .task-delete {
     opacity: 0;
     color: var(--grey);
     font-size: 14px;
@@ -274,12 +274,11 @@
     padding: 4px;
   }
 
-  .task-item:hover .task-delete, .person-card:hover .person-delete {
+  .task-item:hover .task-delete {
     opacity: 1;
   }
 
   .task-delete:hover { color: var(--red); }
-  .person-delete:hover { color: var(--red); }
 
   /* Add Buttons */
   .add-task-btn {
@@ -301,26 +300,6 @@
     border-color: var(--orange);
     color: var(--orange);
   }
-
-  .add-person-card {
-    background: transparent;
-    border: 2px dashed var(--charcoal-3);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    min-height: 200px;
-    border-radius: 16px;
-    color: var(--grey);
-    cursor: pointer;
-    transition: all 0.2s;
-    gap: 10px;
-  }
-
-  .add-person-card:hover {
-    background: rgba(255,107,26,0.03);
-    border-color: var(--orange);
-    color: var(--orange);
-  }
-
-  .add-person-card i { font-size: 24px; }
 
   .task-deadline {
     font-size: 10px; font-weight: 700;
@@ -715,7 +694,7 @@
 <!-- ─── NEXT ACTIONS (by person) ─── -->
 <div class="section-title">NEXT ACTIONS — 담당자별</div>
 <div class="actions-grid" id="actionsGrid">
-  <!-- Dynamic cards will be managed by JS for better persistence -->
+  <!-- Dynamic cards for the 3 fixed members -->
 </div>
 
 <!-- Template for Person Card (Hidden) -->
@@ -724,10 +703,9 @@
     <div class="person-header">
       <div class="person-avatar"></div>
       <div style="flex:1;">
-        <div class="person-name" contenteditable="true">이름 수정</div>
-        <div class="person-role" contenteditable="true">역할 수정</div>
+        <div class="person-name">이름</div>
+        <div class="person-role">역할</div>
       </div>
-      <div class="person-delete">✕</div>
     </div>
     <div class="task-list">
       <!-- tasks go here -->
@@ -1189,13 +1167,13 @@
 
   <!-- ─── JAVASCRIPT FOR DYNAMIC TASK MANAGEMENT ─── -->
   <script>
-    // 저장 키를 변경하여 이전의 잘못된 데이터를 강제로 새로고침합니다.
-    const STORAGE_KEY = 'petigo_actions_v5_final'; 
+    // 저장 키를 변경하여 이전 데이터를 완전히 무시하고 원본 데이터를 강제 로드합니다.
+    const STORAGE_KEY = 'petigo_actions_v10_3p_final'; 
     const actionsGrid = document.getElementById('actionsGrid');
     const personTemplate = document.getElementById('personTemplate');
     const taskTemplate = document.getElementById('taskTemplate');
 
-    // 원본 데이터 100% (전실장, 유실장, 대표님 모든 항목)
+    // 사용자가 준 원본 데이터 100% 복구
     const initialData = [
       {
         name: '전실장 (전형우)', role: '제품 디자이너', avatar: '전', avatarClass: 'avatar-designer',
@@ -1215,7 +1193,7 @@
         tasks: [
           { title: 'PETIGO 로고 시안 공유', detail: '테크웨어·아웃도어 무드 반영 / 심볼형 + 워드마크형 2버전 / 시안 3종 이상', deadline: '긴급', deadlineClass: 'deadline-urgent', checked: false },
           { title: '브랜드 컬러 팔레트 & 타이포그래피 가이드 초안', detail: '차콜 #1C1C1E + 오렌지 포인트 + 화이트 — 전실장 컬러 시스템 기준으로 전달 필수', deadline: '긴급', deadlineClass: 'deadline-urgent', checked: false },
-          { title: '브랜드 보이스 & 슬로건 확정', detail: "'강아지계의 블랙야크' 무드 / '거품 뺀 프리미엄' 핵심 메시지 녹여내기", deadline: '4월 말', deadlineClass: 'deadline-soon', checked: false },
+          { title: '브랜드 보이스 & 슬로건 확정', detail: "\'강아지계의 블랙야크\' 무드 / \'거품 뺀 프리미엄\' 핵심 메시지 녹여내기", deadline: '4월 말', deadlineClass: 'deadline-soon', checked: false },
           { title: '상세페이지 구성 기획 & 와이어프레임', detail: '제품별 섹션 설계 + 어필 포인트 카피 초안 8종', deadline: '4월 중순~', deadlineClass: 'deadline-soon', checked: false },
           { title: '촬영 무드보드 기획', detail: '화이트컷 · 배경컷 · 착용컷 구성 방향 기획 (6~7월 전실장 협업 전 준비)', deadline: '4월~', deadlineClass: 'deadline-soon', checked: false },
           { title: '제품 촬영 기획 & 실행 (전실장 협업)', detail: '스튜디오·실외 섭외 + 실제 견공 착용컷 촬영 + 보정 이미지 세트 완성', deadline: '6~7월', deadlineClass: 'deadline-normal', checked: false },
@@ -1245,7 +1223,7 @@
 
     function saveData() {
       const data = [];
-      document.querySelectorAll('.person-card:not(.add-person-card)').forEach(card => {
+      document.querySelectorAll('.person-card').forEach(card => {
         const person = {
           name: card.querySelector('.person-name').innerText,
           role: card.querySelector('.person-role').innerText,
@@ -1297,8 +1275,10 @@
           tItem.addEventListener('click', (e) => {
             if (e.target.hasAttribute('contenteditable')) return;
             if (e.target.classList.contains('task-delete')) {
-              tItem.remove();
-              saveData();
+              if (confirm('이 작업을 삭제하시겠습니까?')) {
+                tItem.remove();
+                saveData();
+              }
               return;
             }
             cb.checked = !cb.checked;
@@ -1313,13 +1293,17 @@
           taskList.appendChild(tItem);
         });
 
-        // 담당자 카드 이벤트
+        // 작업 추가 이벤트
         card.querySelector('.add-task-btn').addEventListener('click', () => {
           const tItem = taskTemplate.content.cloneNode(true).querySelector('.task-item');
           tItem.querySelectorAll('[contenteditable]').forEach(el => el.addEventListener('blur', saveData));
           tItem.addEventListener('click', (e) => {
             if (e.target.hasAttribute('contenteditable')) return;
-            if (e.target.classList.contains('task-delete')) { tItem.remove(); saveData(); return; }
+            if (e.target.classList.contains('task-delete')) {
+              tItem.remove();
+              saveData();
+              return;
+            }
             const cb = tItem.querySelector('.task-checkbox');
             cb.checked = !cb.checked;
             saveData();
@@ -1328,32 +1312,8 @@
           saveData();
         });
 
-        card.querySelector('.person-delete').addEventListener('click', () => {
-          if (confirm('이 담당자 카드를 삭제하시겠습니까?')) {
-            card.remove();
-            saveData();
-          }
-        });
-
-        card.querySelectorAll('[contenteditable]').forEach(el => el.addEventListener('blur', saveData));
-
         actionsGrid.appendChild(card);
       });
-
-      // 담당자 추가 카드
-      const addCard = document.createElement('div');
-      addCard.className = 'add-person-card';
-      addCard.innerHTML = '<i>+</i><div>담당자 추가</div>';
-      addCard.onclick = () => {
-        const newData = loadData();
-        newData.push({
-          name: '새 담당자', role: '역할 입력', avatar: '?', avatarClass: 'avatar-ceo',
-          tasks: []
-        });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
-        render();
-      };
-      actionsGrid.appendChild(addCard);
     }
 
     document.addEventListener('DOMContentLoaded', render);
