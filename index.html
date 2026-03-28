@@ -173,12 +173,51 @@
   .task-list { padding: 16px 20px; }
 
   .task-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 10px 0;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0;
     border-bottom: 1px solid rgba(255,255,255,0.05);
   }
 
   .task-item:last-child { border-bottom: none; }
+
+  /* Checkbox Custom Styling */
+  .task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--charcoal-3);
+    border-radius: 4px;
+    background: var(--charcoal-1);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 3px;
+    transition: all 0.2s ease;
+  }
+
+  .task-checkbox:checked {
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+
+  .task-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 900;
+  }
+
+  .task-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255,107,26,0.2);
+  }
+
+  .task-content { flex: 1; }
 
   .task-deadline {
     font-size: 10px; font-weight: 700;
@@ -580,6 +619,7 @@
     </div>
     <div class="task-list">
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox" checked>
         <div class="task-deadline deadline-done">완료↗</div>
         <div class="task-content">
           <div class="task-title">1차 시안 3종 납품</div>
@@ -587,6 +627,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-urgent">긴급</div>
         <div class="task-content">
           <div class="task-title">1차 피드백 반영 & 시안 수정 확정</div>
@@ -594,6 +635,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-urgent">긴급</div>
         <div class="task-content">
           <div class="task-title">원단 시장 방문</div>
@@ -601,6 +643,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월 중순</div>
         <div class="task-content">
           <div class="task-title">전 제품 테크팩 착수 & 전달</div>
@@ -608,6 +651,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월 중순</div>
         <div class="task-content">
           <div class="task-title">2차 배치 시안 순차 제작</div>
@@ -615,6 +659,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월 말</div>
         <div class="task-content">
           <div class="task-title">유실장 컬러 가이드 수령 후 컬러 시스템 통일</div>
@@ -622,6 +667,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">5월 초</div>
         <div class="task-content">
           <div class="task-title">패키지 전개도 & 행택 디자인 시안</div>
@@ -629,6 +675,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">5~6월</div>
         <div class="task-content">
           <div class="task-title">1차 샘플 검수 & 디테일 점검</div>
@@ -649,6 +696,7 @@
     </div>
     <div class="task-list">
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-urgent">긴급</div>
         <div class="task-content">
           <div class="task-title">PETIGO 로고 시안 공유</div>
@@ -656,6 +704,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-urgent">긴급</div>
         <div class="task-content">
           <div class="task-title">브랜드 컬러 팔레트 & 타이포그래피 가이드 초안</div>
@@ -663,6 +712,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월 말</div>
         <div class="task-content">
           <div class="task-title">브랜드 보이스 & 슬로건 확정</div>
@@ -670,6 +720,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월 중순~</div>
         <div class="task-content">
           <div class="task-title">상세페이지 구성 기획 & 와이어프레임</div>
@@ -677,6 +728,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월~</div>
         <div class="task-content">
           <div class="task-title">촬영 무드보드 기획</div>
@@ -684,6 +736,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">6~7월</div>
         <div class="task-content">
           <div class="task-title">제품 촬영 기획 & 실행 (전실장 협업)</div>
@@ -691,6 +744,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">7~8월</div>
         <div class="task-content">
           <div class="task-title">상세페이지 디자인 & 제작 (마케터 직접)</div>
@@ -698,6 +752,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">8~9월</div>
         <div class="task-content">
           <div class="task-title">인플루언서 공구 모델 준비</div>
@@ -718,6 +773,7 @@
     </div>
     <div class="task-list">
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-urgent">긴급</div>
         <div class="task-content">
           <div class="task-title">미얀마 생산팀 일정 협의</div>
@@ -725,6 +781,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-urgent">긴급</div>
         <div class="task-content">
           <div class="task-title">중국 소싱팀 원단·부자재 견적 착수</div>
@@ -732,6 +789,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월 초</div>
         <div class="task-content">
           <div class="task-title">초도 생산 수량 확정</div>
@@ -739,6 +797,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-soon">4월 중순</div>
         <div class="task-content">
           <div class="task-title">원단·부자재 샘플 발주 & 품질 확인</div>
@@ -746,6 +805,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">5~6월</div>
         <div class="task-content">
           <div class="task-title">불량 기준 & QC 기준서 합의</div>
@@ -753,6 +813,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">6월 중순</div>
         <div class="task-content">
           <div class="task-title">본 생산 착수 + 패키지 인쇄 동시 발주</div>
@@ -760,6 +821,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">8~9월</div>
         <div class="task-content">
           <div class="task-title">물류센터 입고 & 배송 프로세스 확인</div>
@@ -767,6 +829,7 @@
         </div>
       </div>
       <div class="task-item">
+        <input type="checkbox" class="task-checkbox">
         <div class="task-deadline deadline-normal">전 기간</div>
         <div class="task-content">
           <div class="task-title">판매 채널 전략 결정</div>
