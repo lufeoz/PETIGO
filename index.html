@@ -173,48 +173,60 @@
   .task-list { padding: 16px 20px; }
 
   .task-item {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px 0;
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 12px;
+    margin: 0 -10px;
+    border-radius: 12px;
     border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    user-select: none;
+  }
+
+  .task-item:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateX(4px);
+  }
+
+  .task-item:active {
+    background: rgba(255,255,255,0.08);
+    transform: translateX(2px) scale(0.995);
   }
 
   .task-item:last-child { border-bottom: none; }
 
   /* Checkbox Custom Styling */
   .task-checkbox {
+    pointer-events: none; /* Row click handles this now */
     appearance: none;
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 1px solid var(--charcoal-3);
-    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--charcoal-3);
+    border-radius: 6px;
     background: var(--charcoal-1);
-    cursor: pointer;
     position: relative;
     flex-shrink: 0;
-    margin-top: 3px;
+    margin-top: 2px;
     transition: all 0.2s ease;
   }
 
   .task-checkbox:checked {
     background: var(--orange);
     border-color: var(--orange);
+    box-shadow: 0 0 10px rgba(255,107,26,0.3);
   }
 
   .task-checkbox:checked::after {
     content: '✓';
     position: absolute;
     color: white;
-    font-size: 12px;
+    font-size: 13px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-weight: 900;
-  }
-
-  .task-checkbox:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(255,107,26,0.2);
   }
 
   .task-content { flex: 1; }
@@ -1277,25 +1289,26 @@
   <small style="margin-top:6px; display:block; opacity:0.5;">2026.03.28 기준 · 회의록 & 기획안 반영 버전</small>
 </div>
 
-  <!-- ─── JAVASCRIPT FOR PERSISTENCE ─── -->
+  <!-- ─── JAVASCRIPT FOR PERSISTENCE & INTERACTION ─── -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const checkboxes = document.querySelectorAll('.task-checkbox');
+      const taskItems = document.querySelectorAll('.task-item');
       
-      // 1. 각 체크박스에 고유 ID 부여 및 상태 복원
-      checkboxes.forEach((cb, index) => {
+      taskItems.forEach((item, index) => {
+        const checkbox = item.querySelector('.task-checkbox');
         const storageKey = `petigo_task_${index}`;
-        cb.id = storageKey;
+        checkbox.id = storageKey;
         
-        // 저장된 상태가 있으면 복원
+        // 상태 복원
         const savedState = localStorage.getItem(storageKey);
         if (savedState !== null) {
-          cb.checked = savedState === 'true';
+          checkbox.checked = savedState === 'true';
         }
 
-        // 2. 클릭 시 상태 저장 이벤트 리스너 등록
-        cb.addEventListener('change', (e) => {
-          localStorage.setItem(storageKey, e.target.checked);
+        // 행 전체 클릭 시 체크박스 토글 및 저장
+        item.addEventListener('click', () => {
+          checkbox.checked = !checkbox.checked;
+          localStorage.setItem(storageKey, checkbox.checked);
         });
       });
     });
