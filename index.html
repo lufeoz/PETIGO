@@ -248,6 +248,80 @@
 
   .task-content { flex: 1; }
 
+  /* Editable Text Styles */
+  [contenteditable="true"] {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  [contenteditable="true"]:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  [contenteditable="true"]:focus {
+    background: rgba(255,107,26,0.1);
+    box-shadow: 0 0 0 1px var(--orange-dim);
+  }
+
+  .task-delete, .person-delete {
+    opacity: 0;
+    color: var(--grey);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 4px;
+  }
+
+  .task-item:hover .task-delete, .person-card:hover .person-delete {
+    opacity: 1;
+  }
+
+  .task-delete:hover { color: var(--red); }
+  .person-delete:hover { color: var(--red); }
+
+  /* Add Buttons */
+  .add-task-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: transparent;
+    border: 1px dashed var(--charcoal-3);
+    border-radius: 10px;
+    color: var(--grey);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+
+  .add-task-btn:hover {
+    background: rgba(255,107,26,0.05);
+    border-color: var(--orange);
+    color: var(--orange);
+  }
+
+  .add-person-card {
+    background: transparent;
+    border: 2px dashed var(--charcoal-3);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 200px;
+    border-radius: 16px;
+    color: var(--grey);
+    cursor: pointer;
+    transition: all 0.2s;
+    gap: 10px;
+  }
+
+  .add-person-card:hover {
+    background: rgba(255,107,26,0.03);
+    border-color: var(--orange);
+    color: var(--orange);
+  }
+
+  .add-person-card i { font-size: 24px; }
+
   .task-deadline {
     font-size: 10px; font-weight: 700;
     padding: 3px 7px; border-radius: 5px;
@@ -640,240 +714,42 @@
 
 <!-- ─── NEXT ACTIONS (by person) ─── -->
 <div class="section-title">NEXT ACTIONS — 담당자별</div>
-<div class="actions-grid">
-
-  <!-- 전실장 -->
-  <div class="person-card">
-    <div class="person-header">
-      <div class="person-avatar avatar-designer">전</div>
-      <div>
-        <div class="person-name">전실장 (전형우)</div>
-        <div class="person-role">제품 디자이너</div>
-      </div>
-    </div>
-    <div class="task-list">
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox" checked>
-        <div class="task-deadline deadline-done">완료↗</div>
-        <div class="task-content">
-          <div class="task-title">1차 시안 3종 납품</div>
-          <div class="task-detail">패딩 필수 + 자율 2종 / 3월 27일</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-urgent">긴급</div>
-        <div class="task-content">
-          <div class="task-title">1차 피드백 반영 & 시안 수정 확정</div>
-          <div class="task-detail">컬러·형태·브랜드 감성 점검 후 수정 · 4월 초</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-urgent">긴급</div>
-        <div class="task-content">
-          <div class="task-title">원단 시장 방문</div>
-          <div class="task-detail">Cordura·나일론·플리스 원단 실물 확인 및 스펙 검토</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월 중순</div>
-        <div class="task-content">
-          <div class="task-title">전 제품 테크팩 착수 & 전달</div>
-          <div class="task-detail">확정된 제품부터 즉시 착수 — 원단 스펙·봉제 지시·패턴 포함, 미얀마 생산팀 전달</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월 중순</div>
-        <div class="task-content">
-          <div class="task-title">2차 배치 시안 순차 제작</div>
-          <div class="task-detail">나머지 5종 배치 결정 후 순서대로 시안 제작</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월 말</div>
-        <div class="task-content">
-          <div class="task-title">유실장 컬러 가이드 수령 후 컬러 시스템 통일</div>
-          <div class="task-detail">전 제품 다크 차콜 + 세이프티 오렌지 + 화이트 기준 적용</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">5월 초</div>
-        <div class="task-content">
-          <div class="task-title">패키지 전개도 & 행택 디자인 시안</div>
-          <div class="task-detail">패키지 전개도 · 행택 · 바코드 라벨 시안 제작</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">5~6월</div>
-        <div class="task-content">
-          <div class="task-title">1차 샘플 검수 & 디테일 점검</div>
-          <div class="task-detail">미얀마발 샘플 수령 후 재현도 점검 — 봉제·소재·컬러·구조 확인</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 유실장 -->
-  <div class="person-card">
-    <div class="person-header">
-      <div class="person-avatar avatar-marketer">유</div>
-      <div>
-        <div class="person-name">유실장 (유경서)</div>
-        <div class="person-role">브랜드 마케터</div>
-      </div>
-    </div>
-    <div class="task-list">
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-urgent">긴급</div>
-        <div class="task-content">
-          <div class="task-title">PETIGO 로고 시안 공유</div>
-          <div class="task-detail">테크웨어·아웃도어 무드 반영 / 심볼형 + 워드마크형 2버전 / 시안 3종 이상</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-urgent">긴급</div>
-        <div class="task-content">
-          <div class="task-title">브랜드 컬러 팔레트 & 타이포그래피 가이드 초안</div>
-          <div class="task-detail">차콜 #1C1C1E + 오렌지 포인트 + 화이트 — 전실장 컬러 시스템 기준으로 전달 필수</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월 말</div>
-        <div class="task-content">
-          <div class="task-title">브랜드 보이스 & 슬로건 확정</div>
-          <div class="task-detail">'강아지계의 블랙야크' 무드 / '거품 뺀 프리미엄' 핵심 메시지 녹여내기</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월 중순~</div>
-        <div class="task-content">
-          <div class="task-title">상세페이지 구성 기획 & 와이어프레임</div>
-          <div class="task-detail">제품별 섹션 설계 + 어필 포인트 카피 초안 8종</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월~</div>
-        <div class="task-content">
-          <div class="task-title">촬영 무드보드 기획</div>
-          <div class="task-detail">화이트컷 · 배경컷 · 착용컷 구성 방향 기획 (6~7월 전실장 협업 전 준비)</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">6~7월</div>
-        <div class="task-content">
-          <div class="task-title">제품 촬영 기획 & 실행 (전실장 협업)</div>
-          <div class="task-detail">스튜디오·실외 섭외 + 실제 견공 착용컷 촬영 + 보정 이미지 세트 완성</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">7~8월</div>
-        <div class="task-content">
-          <div class="task-title">상세페이지 디자인 & 제작 (마케터 직접)</div>
-          <div class="task-detail">8종 전 제품 PC·모바일 최적화 상세페이지 제작</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">8~9월</div>
-        <div class="task-content">
-          <div class="task-title">인플루언서 공구 모델 준비</div>
-          <div class="task-detail">반려견 인플루언서 20~50명 선정 & 컨택 — 공동구매(공구) 런칭 채널 확보</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 대표님 -->
-  <div class="person-card">
-    <div class="person-header">
-      <div class="person-avatar avatar-ceo">대</div>
-      <div>
-        <div class="person-name">대표님</div>
-        <div class="person-role">총괄 · 생산 관리</div>
-      </div>
-    </div>
-    <div class="task-list">
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-urgent">긴급</div>
-        <div class="task-content">
-          <div class="task-title">미얀마 생산팀 일정 협의</div>
-          <div class="task-detail">4월 중순 테크팩 수령 → 샘플 제작 착수 일정 확정 / 리드타임 2~3주 확인</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-urgent">긴급</div>
-        <div class="task-content">
-          <div class="task-title">중국 소싱팀 원단·부자재 견적 착수</div>
-          <div class="task-detail">Cordura·나일론·YKK 버클·웨빙·코팅 알루미늄 버클 전 품목 견적 비교</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월 초</div>
-        <div class="task-content">
-          <div class="task-title">초도 생산 수량 확정</div>
-          <div class="task-detail">제품별 SKU 수량 계획 + KC인증 기준 사전 검토</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-soon">4월 중순</div>
-        <div class="task-content">
-          <div class="task-title">원단·부자재 샘플 발주 & 품질 확인</div>
-          <div class="task-detail">확정 원단 샘플 → 전실장 + 미얀마 공장 공유</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">5~6월</div>
-        <div class="task-content">
-          <div class="task-title">불량 기준 & QC 기준서 합의</div>
-          <div class="task-detail">미얀마·중국팀 공동 QC 기준 서면 합의 (목표 불량률 3% 이하)</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">6월 중순</div>
-        <div class="task-content">
-          <div class="task-title">본 생산 착수 + 패키지 인쇄 동시 발주</div>
-          <div class="task-detail">⚠️ 크리티컬 — 리드타임 4~6주 / 8월 초 출고 목표</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">8~9월</div>
-        <div class="task-content">
-          <div class="task-title">물류센터 입고 & 배송 프로세스 확인</div>
-          <div class="task-detail">스마트스토어 물류 세팅 + 재발주 계획 수립 (초도 매진 대비)</div>
-        </div>
-      </div>
-      <div class="task-item">
-        <input type="checkbox" class="task-checkbox">
-        <div class="task-deadline deadline-normal">전 기간</div>
-        <div class="task-content">
-          <div class="task-title">판매 채널 전략 결정</div>
-          <div class="task-detail">스마트스토어 + 식스샵 자체 사이트 + 공구(공동구매) 모델 병행 여부 확정</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+<div class="actions-grid" id="actionsGrid">
+  <!-- Dynamic cards will be managed by JS for better persistence -->
 </div>
+
+<!-- Template for Person Card (Hidden) -->
+<template id="personTemplate">
+  <div class="person-card">
+    <div class="person-header">
+      <div class="person-avatar"></div>
+      <div style="flex:1;">
+        <div class="person-name" contenteditable="true">이름 수정</div>
+        <div class="person-role" contenteditable="true">역할 수정</div>
+      </div>
+      <div class="person-delete">✕</div>
+    </div>
+    <div class="task-list">
+      <!-- tasks go here -->
+    </div>
+    <div style="padding: 0 20px 20px;">
+      <button class="add-task-btn">+ 작업 추가</button>
+    </div>
+  </div>
+</template>
+
+<!-- Template for Task Item (Hidden) -->
+<template id="taskTemplate">
+  <div class="task-item">
+    <input type="checkbox" class="task-checkbox">
+    <div class="task-deadline deadline-urgent" contenteditable="true">긴급</div>
+    <div class="task-content">
+      <div class="task-title" contenteditable="true">새로운 작업 제목</div>
+      <div class="task-detail" contenteditable="true">세부 내용 입력</div>
+    </div>
+    <div class="task-delete">✕</div>
+  </div>
+</template>
 
 <!-- ─── PRODUCT PRIORITY ─── -->
 <div class="section-title">PRODUCT PRIORITY — 1차 제품 8종 (회의 반영 우선순위)</div>
@@ -1311,29 +1187,150 @@
   <small style="margin-top:6px; display:block; opacity:0.5;">2026.03.28 기준 · 회의록 & 기획안 반영 버전</small>
 </div>
 
-  <!-- ─── JAVASCRIPT FOR PERSISTENCE & INTERACTION ─── -->
+  <!-- ─── JAVASCRIPT FOR DYNAMIC TASK MANAGEMENT ─── -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const taskItems = document.querySelectorAll('.task-item');
-      
-      taskItems.forEach((item, index) => {
-        const checkbox = item.querySelector('.task-checkbox');
-        const storageKey = `petigo_task_${index}`;
-        checkbox.id = storageKey;
-        
-        // 상태 복원
-        const savedState = localStorage.getItem(storageKey);
-        if (savedState !== null) {
-          checkbox.checked = savedState === 'true';
-        }
+    const STORAGE_KEY = 'petigo_actions_data';
+    const actionsGrid = document.getElementById('actionsGrid');
+    const personTemplate = document.getElementById('personTemplate');
+    const taskTemplate = document.getElementById('taskTemplate');
 
-        // 행 전체 클릭 시 체크박스 토글 및 저장
-        item.addEventListener('click', () => {
-          checkbox.checked = !checkbox.checked;
-          localStorage.setItem(storageKey, checkbox.checked);
+    // 초기 데이터 (데이터가 없을 때만 사용)
+    const initialData = [
+      {
+        name: '전실장 (전형우)', role: '제품 디자이너', avatar: '전', avatarClass: 'avatar-designer',
+        tasks: [
+          { title: '1차 시안 3종 납품', detail: '패딩 필수 + 자율 2종 / 3월 27일', deadline: '완료↗', deadlineClass: 'deadline-done', checked: true },
+          { title: '1차 피드백 반영 & 시안 수정 확정', detail: '컬러·형태·브랜드 감성 점검 후 수정 · 4월 초', deadline: '긴급', deadlineClass: 'deadline-urgent', checked: false },
+          { title: '원단 시장 방문', detail: 'Cordura·나일론·플리스 원단 실물 확인 및 스펙 검토', deadline: '긴급', deadlineClass: 'deadline-urgent', checked: false }
+        ]
+      },
+      {
+        name: '유실장 (유경서)', role: '브랜드 마케터', avatar: '유', avatarClass: 'avatar-marketer',
+        tasks: [
+          { title: 'PETIGO 로고 시안 공유', detail: '테크웨어·아웃도어 무드 반영 / 심볼형 + 워드마크형 2버전', deadline: '긴급', deadlineClass: 'deadline-urgent', checked: false }
+        ]
+      }
+    ];
+
+    function loadData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : initialData;
+    }
+
+    function saveData() {
+      const data = [];
+      document.querySelectorAll('.person-card:not(.add-person-card)').forEach(card => {
+        const person = {
+          name: card.querySelector('.person-name').innerText,
+          role: card.querySelector('.person-role').innerText,
+          avatar: card.querySelector('.person-avatar').innerText,
+          avatarClass: Array.from(card.querySelector('.person-avatar').classList).find(c => c.startsWith('avatar-')) || '',
+          tasks: []
+        };
+        card.querySelectorAll('.task-item').forEach(item => {
+          person.tasks.push({
+            title: item.querySelector('.task-title').innerText,
+            detail: item.querySelector('.task-detail').innerText,
+            deadline: item.querySelector('.task-deadline').innerText,
+            deadlineClass: Array.from(item.querySelector('.task-deadline').classList).find(c => c.startsWith('deadline-')) || 'deadline-normal',
+            checked: item.querySelector('.task-checkbox').checked
+          });
         });
+        data.push(person);
       });
-    });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function render() {
+      const data = loadData();
+      actionsGrid.innerHTML = '';
+      
+      data.forEach((person, pIndex) => {
+        const card = personTemplate.content.cloneNode(true).querySelector('.person-card');
+        const avatar = card.querySelector('.person-avatar');
+        avatar.innerText = person.avatar || person.name[0];
+        if (person.avatarClass) avatar.classList.add(person.avatarClass);
+        
+        card.querySelector('.person-name').innerText = person.name;
+        card.querySelector('.person-role').innerText = person.role;
+        
+        const taskList = card.querySelector('.task-list');
+        person.tasks.forEach(task => {
+          const tItem = taskTemplate.content.cloneNode(true).querySelector('.task-item');
+          const cb = tItem.querySelector('.task-checkbox');
+          cb.checked = task.checked;
+          
+          const dl = tItem.querySelector('.task-deadline');
+          dl.innerText = task.deadline;
+          if (task.deadlineClass) dl.className = `task-deadline ${task.deadlineClass}`;
+          
+          tItem.querySelector('.task-title').innerText = task.title;
+          tItem.querySelector('.task-detail').innerText = task.detail;
+          
+          // 이벤트 바인딩
+          tItem.addEventListener('click', (e) => {
+            if (e.target.hasAttribute('contenteditable')) return;
+            if (e.target.classList.contains('task-delete')) {
+              tItem.remove();
+              saveData();
+              return;
+            }
+            cb.checked = !cb.checked;
+            saveData();
+          });
+
+          // 텍스트 수정 시 저장
+          tItem.querySelectorAll('[contenteditable]').forEach(el => {
+            el.addEventListener('blur', saveData);
+          });
+
+          taskList.appendChild(tItem);
+        });
+
+        // 담당자 카드 이벤트
+        card.querySelector('.add-task-btn').addEventListener('click', () => {
+          const tItem = taskTemplate.content.cloneNode(true).querySelector('.task-item');
+          tItem.querySelectorAll('[contenteditable]').forEach(el => el.addEventListener('blur', saveData));
+          tItem.addEventListener('click', (e) => {
+            if (e.target.hasAttribute('contenteditable')) return;
+            if (e.target.classList.contains('task-delete')) { tItem.remove(); saveData(); return; }
+            const cb = tItem.querySelector('.task-checkbox');
+            cb.checked = !cb.checked;
+            saveData();
+          });
+          taskList.appendChild(tItem);
+          saveData();
+        });
+
+        card.querySelector('.person-delete').addEventListener('click', () => {
+          if (confirm('이 담당자 카드를 삭제하시겠습니까?')) {
+            card.remove();
+            saveData();
+          }
+        });
+
+        card.querySelectorAll('[contenteditable]').forEach(el => el.addEventListener('blur', saveData));
+
+        actionsGrid.appendChild(card);
+      });
+
+      // 담당자 추가 카드
+      const addCard = document.createElement('div');
+      addCard.className = 'add-person-card';
+      addCard.innerHTML = '<i>+</i><div>담당자 추가</div>';
+      addCard.onclick = () => {
+        const newData = loadData();
+        newData.push({
+          name: '새 담당자', role: '역할 입력', avatar: '?', avatarClass: 'avatar-ceo',
+          tasks: []
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+        render();
+      };
+      actionsGrid.appendChild(addCard);
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
   </script>
 </body>
 </html>
